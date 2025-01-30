@@ -52,3 +52,19 @@ using (StreamReader sr = new StreamReader("flights.csv"))
 
     }
 }
+
+//Feature 3 - List all flights
+void ListAllFlights()
+{
+    Console.WriteLine("========================================");
+    Console.WriteLine("List of Flights for Changi Airport Terminal 5");
+    Console.WriteLine("========================================");
+    Console.WriteLine($"{"Flight Number",-15} {"Airline Name",-20} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time",-30}");
+    foreach (Flight flight in terminal.Flights.Values)
+    {
+        Airline airline = terminal.GetAirlineFromFlight(flight);
+        string airlineName = airline.Name;
+        Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-20} {flight.Origin,-15} {flight.Destination,-15} {flight.ExpectedTime,-30}");
+        
+    }
+}
