@@ -83,6 +83,52 @@ void ListBoardingGates()
     }
 }
 
+//Feature 6 - Create a new flight
+void CreateFlight()
+{
+    while (true)
+
+    {
+        Console.Write("Enter Flight Number: ");
+        string flightNumber = Console.ReadLine();
+        Console.Write("Enter Origin: ");
+        string origin = Console.ReadLine();
+        Console.Write("Enter Destination: ");
+        string destination = Console.ReadLine();
+        Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm):");
+        DateTime expectedTime = Convert.ToDateTime(Console.ReadLine());
+        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None):");
+        string specialRequestCode = Console.ReadLine();
+        Flight newFlight = null;
+
+        if (specialRequestCode == "CFFT")
+        {
+            newFlight = new CFFTFlight(flightNumber, origin, destination, expectedTime);
+        }
+        else if (specialRequestCode == "DDJB")
+        {
+            newFlight = new DDJBFlight(flightNumber, origin, destination, expectedTime);
+        }
+        else if (specialRequestCode == "LWTT")
+        {
+            newFlight = new LWTTFlight(flightNumber, origin, destination, expectedTime);
+        }
+        else if (specialRequestCode == "None")
+        {
+            newFlight = new NORMFlight(flightNumber, origin, destination, expectedTime);
+        }
+
+        terminal.Flights[flightNumber] = newFlight;
+        Console.WriteLine($"Flight {newFlight.FlightNumber} has been added!");
+        Console.Write("Would you like to add another flight? (Y/N)");
+        string response = Console.ReadLine().ToUpper();
+
+        if (response == "N") { break; }
+
+    }
+
+}
+
 //Display Menu
 void DisplayMenu()
 {
