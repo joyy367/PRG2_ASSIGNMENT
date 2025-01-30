@@ -129,6 +129,60 @@ void CreateFlight()
 
 }
 
+//Feature 7 -- Display flight details from an airline
+void DisplayAirlineFlights()
+{
+    Console.WriteLine("========================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("========================================");
+    Console.WriteLine($"{"Airline Code",-15} {"Airline Name",-20}");
+    foreach (Airline airline in terminal.Airlines.Values)
+    {
+        Console.WriteLine($"{airline.Code, -15} {airline.Name, -20}");
+
+    }
+    Console.Write("Enter Airline Code: ");
+    string airlineCode = Console.ReadLine();
+
+    Airline selectedAirline = terminal.Airlines[airlineCode];
+
+    Console.WriteLine("========================================");
+    Console.WriteLine($"List of Flights for {selectedAirline.Name}");
+    Console.WriteLine("========================================");
+
+    foreach (Flight flight in terminal.Flights.Values)
+    {
+        
+        Airline airline = terminal.GetAirlineFromFlight(flight);
+        if (airline == selectedAirline)
+        {
+            selectedAirline.AddFlight(flight);
+          
+        }
+    }
+    Console.WriteLine($"{"Flight Number", -15} {"Airline Name",-20} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time",-30} {"Special Request Code",-20}");
+    
+
+    foreach (Flight flight in selectedAirline.Flights.Values)
+    {
+        string specialRequestCode = "NONE";
+        if (flight is CFFTFlight)
+        {
+            specialRequestCode = "CFFT";
+        }
+        else if (flight is DDJBFlight)
+        {
+            specialRequestCode = "DDJB";
+        }
+        else if (flight is LWTTFlight)
+        {
+            specialRequestCode = "LWTT";
+        }
+
+        Console.WriteLine($"{flight.FlightNumber, -15} {selectedAirline.Name, -20} {flight.Origin, -15} {flight.Destination, -15} {flight.ExpectedTime, -30} {specialRequestCode, -20}");
+    }
+}
+
 //Display Menu
 void DisplayMenu()
 {
