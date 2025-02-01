@@ -24,7 +24,7 @@ namespace S10269287_PRG2Assignment
     }
     public virtual double CalculateFees()
     {
-        return 800.0;
+        return 0;
     }
     public override string ToString()
     {
