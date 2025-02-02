@@ -49,6 +49,9 @@ using (StreamReader sr = new StreamReader("flights.csv"))
             newFlight = new NORMFlight(flightNumber, origin, destination, expectedTime);
         }
         terminal.Flights[flightNumber] = newFlight;
+        //add to respective airline dict
+        Airline airline = terminal.GetAirlineFromFlight(newFlight);
+        airline.AddFlight(newFlight);
 
     }
 }
