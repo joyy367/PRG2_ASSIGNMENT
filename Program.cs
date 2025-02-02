@@ -81,8 +81,19 @@ void ListBoardingGates()
     Console.WriteLine($"{"Gate Name",-10} {"DDJB",-10} {"CFFT",-10} {"LWTT",-10}");
     foreach (BoardingGate boardingGate in terminal.BoardingGates.Values)
     {
-        Console.WriteLine($"{boardingGate.GateName,-10} {boardingGate.SupportsDDJB,-10} {boardingGate.SupportsCFFT,-10} {boardingGate.SupportsLWTT,-10}");
+        string assignedFlight;
 
+        if (boardingGate.Flight != null) // check if any flight is assigned to the gate
+        {
+            assignedFlight = boardingGate.Flight.FlightNumber;
+        }
+        else
+        {
+            assignedFlight = "None";
+        }
+
+        // display the boarding gate details
+        Console.WriteLine($"{boardingGate.GateName,-10} {boardingGate.SupportsDDJB,-10} {boardingGate.SupportsCFFT,-10} {boardingGate.SupportsLWTT,-10} {assignedFlight,-20}");
     }
 }
 
