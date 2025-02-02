@@ -103,16 +103,112 @@ void CreateFlight()
     while (true)
 
     {
-        Console.Write("Enter Flight Number: ");
-        string flightNumber = Console.ReadLine();
-        Console.Write("Enter Origin: ");
-        string origin = Console.ReadLine();
-        Console.Write("Enter Destination: ");
-        string destination = Console.ReadLine();
-        Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm):");
-        DateTime expectedTime = Convert.ToDateTime(Console.ReadLine());
-        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None):");
-        string specialRequestCode = Console.ReadLine();
+        string flightNumber;
+        //validate flight number input
+        while (true)
+        {
+            Console.Write("Enter Flight Number: ");
+            flightNumber = Console.ReadLine().ToUpper();
+        
+            if (string.IsNullOrWhiteSpace(flightNumber))
+            {
+                Console.WriteLine("Flight number cannot be empty!");
+                continue;
+            }
+        
+            string[] flightParts = flightNumber.Split(' ');
+        
+            if (flightParts.Length != 2)
+            {
+                Console.WriteLine("Invalid flight number format. Please enter a flight number in the correct format (eg. SQ 123)!!");
+                continue;
+            }
+        
+            string airlineCode = flightParts[0].ToUpper(); 
+            string numberPart = flightParts[1];      
+        
+            if (!terminal.Airlines.ContainsKey(airlineCode))
+            {
+                Console.WriteLine($"Invalid airline code '{airlineCode}'. Please enter a valid 2-letter Airline Code!");
+                continue;
+            }
+        
+            if (!numberPart.All(char.IsDigit))
+            {
+                Console.WriteLine("Flight number part must be numeric. (eg. SQ 123)");
+                continue;
+            }
+        
+            if (terminal.Flights.ContainsKey(flightNumber))
+            {   
+                Console.WriteLine($"Flight {flightNumber} already exists. Please enter a unique flight number.");
+                continue;
+            }
+        
+                break; 
+            }
+        //validate origin input
+        string origin;
+        
+        while (true)
+        {
+            Console.Write("Enter Origin: ");
+            origin = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(origin))
+            {
+                Console.WriteLine("Origin cannot be empty!");
+                continue;
+            }
+        break;
+        }
+        //validate destination input
+        
+        string destination;
+        while (true)
+        {
+            Console.Write("Enter Destination: ");
+            destination = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(destination))
+            {
+                Console.WriteLine("Destination cannot be empty!");
+                continue;
+            }
+            break;
+        }
+        //validate date time input
+        DateTime expectedTime;
+        while (true)
+        {
+            try
+            {
+                Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
+                expectedTime = Convert.ToDateTime(Console.ReadLine());
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid date. Please enter the date and time in the correct format (dd/mm/yyyy hh:mm).");
+            }
+        }
+        
+        //validate special request code input
+        string specialRequestCode;
+        while (true)
+        {
+            Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+            specialRequestCode = Console.ReadLine().ToUpper();
+            if (string.IsNullOrWhiteSpace(specialRequestCode))
+            {
+                Console.WriteLine("Special Request Code cannot be empty!");
+                continue;
+            }
+            if (specialRequestCode != "CFFT" && specialRequestCode != "DDJB" && specialRequestCode != "LWTT" && specialRequestCode != "NONE")
+            {
+                Console.WriteLine("Invalid special request code. Please enter CFFT, DDJB, LWTT, or None.");
+                continue;
+            }
+            break;
+        }
         Flight newFlight = null;
 
         if (specialRequestCode == "CFFT")
@@ -134,14 +230,43 @@ void CreateFlight()
 
         terminal.Flights[flightNumber] = newFlight;
         Console.WriteLine($"Flight {newFlight.FlightNumber} has been added!");
-        Console.Write("Would you like to add another flight? (Y/N)");
-        string response = Console.ReadLine().ToUpper();
+        Airline airline = terminal.GetAirlineFromFlight(newFlight);
+        airline.AddFlight(newFlight);
 
-        if (response == "N") { break; }
+        //append new flight details to file
+        using (StreamWriter sw = new StreamWriter("flights.csv", true))
+        {
+            sw.WriteLine($"{newFlight.FlightNumber},{newFlight.Origin},{newFlight.Destination},{newFlight.ExpectedTime:dd/MM/yyyy HH:mm},{specialRequestCode}");
+        }
 
-    }
+        string response;
+        while (true)
+        {
+            Console.Write("Would you like to add another flight? (Y/N): ");
+            response = Console.ReadLine().ToUpper();
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                Console.WriteLine("Input cannot be empty!");
+                continue;
+            }
+            if (response != "Y" && response != "N")
+            {
+                 Console.WriteLine("Invalid response. Please enter 'Y' or 'N'!");
+                continue;
+            }
+            break;
+        }
+
+        if (response == "N") 
+        { 
+            break; 
+        }
+
+
+     }
 
 }
+
 
 //Feature 7 -- Display flight details from an airline
 void DisplayAirlineFlights()
