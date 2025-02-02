@@ -371,20 +371,63 @@ void AssignBoardingGate()
 
 //Display Menu
 void DisplayMenu()
-{
-    Console.WriteLine("========================================");
-    Console.WriteLine("Welcome to Changi Airport Terminal 5");
-    Console.WriteLine("========================================");
-    Console.WriteLine("1. List All Flights");
-    Console.WriteLine("2. List Boarding Gates");
-    Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-    Console.WriteLine("4. Create Flight");
-    Console.WriteLine("5. Display Airline Flights");
-    Console.WriteLine("6. Modify Flight Details");
-    Console.WriteLine("7. Display Flight Schedule");
-    Console.WriteLine("0. Exit");
-    Console.WriteLine();
-    Console.Write("Enter your choice: ");
-}
+    {
+        Console.WriteLine("========================================");
+        Console.WriteLine("Welcome to Changi Airport Terminal 5");
+        Console.WriteLine("========================================");
+        Console.WriteLine("1. List All Flights");
+        Console.WriteLine("2. List Boarding Gates");
+        Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+        Console.WriteLine("4. Create Flight");
+        Console.WriteLine("5. Display Airline Flights");
+        Console.WriteLine("6. Display the total Airline Fees");
+        Console.WriteLine("0. Exit");
+        Console.WriteLine();
+        Console.Write("Please select your option: ");
+        Console.WriteLine();
+    }
 
+while (true)
+{
+    DisplayMenu();
+    string choice = Console.ReadLine();
+    if (choice == "1")
+    {
+        ListAllFlights();
+    }
+    else if (choice == "2")
+    {
+        ListBoardingGates();
+    }
+    else if (choice == "3")
+    {
+        AssignBoardingGate();
+    }
+    else if (choice == "4")
+    {
+        CreateFlight();
+    }
+    else if (choice == "5")
+    {
+        DisplayAirlineFlights();
+    }
+    else if (choice == "6")
+    {
+        CalculateTotalFees();
+    }
+    else if (choice == "0")
+    {
+        Console.WriteLine("Goodbye!");
+        break;
+    }
+    else if (string.IsNullOrWhiteSpace(choice))
+    {
+        Console.WriteLine("Input cannot be empty!");
+        continue;
+    }
+    else
+    {
+        Console.WriteLine("Invalid response. Please enter a valid option (1/2/3/4/5/6/0)! ");
+    }
+}
 
