@@ -55,7 +55,13 @@ using (StreamReader sr = new StreamReader("flights.csv"))
 
     }
 }
+Console.WriteLine();
 
+Console.WriteLine();
+
+Console.WriteLine();
+
+Console.WriteLine();
 //Feature 3 - List all flights
 void ListAllFlights()
 {
