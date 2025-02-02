@@ -280,28 +280,36 @@ void DisplayAirlineFlights()
         Console.WriteLine($"{airline.Code, -15} {airline.Name, -20}");
 
     }
-    Console.Write("Enter Airline Code: ");
-    string airlineCode = Console.ReadLine();
-
+   string airlineCode;
+    //validate airline code input
+    while (true)
+    {
+        Console.Write("Enter Airline Code: ");
+        airlineCode = Console.ReadLine().ToUpper();
+    
+        if (string.IsNullOrWhiteSpace(airlineCode))
+        {
+            Console.WriteLine("Airline Code cannot be empty.");
+            continue;
+        }
+        if (!terminal.Airlines.ContainsKey(airlineCode))
+        {
+    
+            Console.WriteLine($"Invalid Airline Code '{airlineCode}'. Please enter a valid 2-letter Airline Code!");
+            continue;
+        }
+        break;
+    }
     Airline selectedAirline = terminal.Airlines[airlineCode];
 
     Console.WriteLine("========================================");
     Console.WriteLine($"List of Flights for {selectedAirline.Name}");
     Console.WriteLine("========================================");
 
-    foreach (Flight flight in terminal.Flights.Values)
-    {
-        
-        Airline airline = terminal.GetAirlineFromFlight(flight);
-        if (airline == selectedAirline)
-        {
-            selectedAirline.AddFlight(flight);
-          
-        }
-    }
-    Console.WriteLine($"{"Flight Number", -15} {"Airline Name",-20} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time",-30} {"Special Request Code",-20}");
-    
+    Console.WriteLine($"{"Flight Number",-15} {"Airline Name",-20} {"Origin",-15} {"Destination",-15} {"Expected Departure/Arrival Time",-35} {"Special Request Code",-20} {"Gate Assigned", -10}");
 
+
+    //check for speical request code
     foreach (Flight flight in selectedAirline.Flights.Values)
     {
         string specialRequestCode = "NONE";
@@ -317,11 +325,19 @@ void DisplayAirlineFlights()
         {
             specialRequestCode = "LWTT";
         }
+        string assignedGate = "None";
+        foreach (BoardingGate gate in terminal.BoardingGates.Values)
+        {
+            if (gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber)
+            {
+                assignedGate = gate.GateName;  
+                break;  
+            }
+        }
 
-        Console.WriteLine($"{flight.FlightNumber, -15} {selectedAirline.Name, -20} {flight.Origin, -15} {flight.Destination, -15} {flight.ExpectedTime, -30} {specialRequestCode, -20}");
+        Console.WriteLine($"{flight.FlightNumber,-15} {selectedAirline.Name,-20} {flight.Origin,-15} {flight.Destination,-15} {flight.ExpectedTime,-35} {specialRequestCode,-20} {assignedGate,-10}");
     }
 }
-
 //Feature 5 - Assign a boarding gate to a flight
 void AssignBoardingGate()
 {
